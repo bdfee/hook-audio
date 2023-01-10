@@ -1,7 +1,8 @@
+import { useState } from 'react'
+
 import Slider from './components/slider'
 import LogEntry from './components/logEntry'
 import noiseGenerator from './noiseGeneration'
-import { useState } from 'react'
 
 const noise = {}
 
@@ -19,28 +20,38 @@ function App() {
     setIsPlaying(!isPlaying)
   }
 
+  console.log('app', noise.gainNode)
   return (
     <div className="App">
       <h1>React Hooks and Web Audio</h1>
-      {!isPlaying
-        ? <button onClick={handlePlay}>play</button>
-        : <button onClick={handleStop}>stop</button>
-      }
-      {isPlaying 
-        ? 
+      <div>
+        {!isPlaying
+          ? <button onClick={handlePlay}>play</button>
+          : <button onClick={handleStop}>stop</button>
+        }
+        <LogEntry log={noiseGenerator.log(noise)} />
+      </div>
+      
+      {isPlaying &&
           <div>
             <Slider 
               parameter={noise.osc.frequency.value} 
               noise={noise} 
               setParameter={noiseGenerator.setFrequency}
-              min="100"
-              max="5000"
-              step="1"
+              min={100}
+              max={5000}
+              step={1}
+            />
+            <Slider
+              parameter={noise.gainNode.gain.value.toPrecision(2)}
+              noise={noise} 
+              setParameter={noiseGenerator.setGain}
+              min={0.00}
+              max={0.75}
+              step={0.01}
             />
           </div>
-        : null
       }
-      <LogEntry log={noiseGenerator.log(noise)} />
     </div>
   );
 }

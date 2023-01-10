@@ -1,22 +1,23 @@
 import { useState } from 'react'
 const Slider = (props) => {
-  const [parameter, setParameter] = useState(props.parameter)
+  const [para, setPara] = useState(props.parameter)
   const handleChange = (noise, value) => {
-    setParameter(value)
-    props.setParameter(noise, parameter)
+    setPara(value)
+    props.setParameter(props.noise, para)
   }
+
   return (
     <div>
       <input
         type="range"
-        value={parameter}
+        value={para}
         min={props.min}
         max={props.max}
         step={props.step}
         onChange={(e) => handleChange(props.noise, e.target.value)}
       >
       </input>
-      <p>current parameter {parameter}</p>
+      <p>current parameter {para}</p>
     </div>
   )
 }

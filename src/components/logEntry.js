@@ -18,8 +18,27 @@ const LogEntry = (props) => {
           const num = Math.random()
           return (
             <div key={'entry-' + num} style={style}>
-              number of oscilators created {entry.oscCreatedCount}
-              frequency logged at 'Stop' {entry.lastFrequency ? entry.lastFrequency : 'n/a'}
+              <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">noiseGenerator logger</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <tr>
+                            <td>osc count</td>
+                            <td>{entry.oscCreatedCount}</td>
+                        </tr>
+                        <tr>
+                            <td>freq @ stop</td>
+                            <td>{entry.lastFrequency ? entry.lastFrequency : 'n/a'}</td>
+                        </tr>
+                        <tr>
+                            <td>gain @ stop </td>
+                            <td>{entry.lastVolume ? entry.lastVolume : 'n/a'}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
           )
         })
