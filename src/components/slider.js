@@ -1,6 +1,7 @@
 import { useState } from 'react'
 const Slider = (props) => {
   const [para, setPara] = useState(props.parameter)
+  
   const handleChange = (noise, value) => {
     setPara(value)
     props.setParameter(props.noise, para)

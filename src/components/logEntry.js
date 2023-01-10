@@ -14,28 +14,24 @@ const LogEntry = (props) => {
         add entry
       </button>
       {
-        entries.length && entries.map(entry => {
+        (entries.length > 0) && entries.map(entry => {
           const num = Math.random()
           return (
             <div key={'entry-' + num} style={style}>
               <table>
                 <thead>
                     <tr>
-                        <th colspan="2">noiseGenerator logger</th>
+                        <th colSpan="6">logger</th>
                     </tr>
                 </thead>
                     <tbody>
                         <tr>
-                            <td>osc count</td>
-                            <td>{entry.oscCreatedCount}</td>
-                        </tr>
-                        <tr>
-                            <td>freq @ stop</td>
-                            <td>{entry.lastFrequency ? entry.lastFrequency : 'n/a'}</td>
-                        </tr>
-                        <tr>
-                            <td>gain @ stop </td>
-                            <td>{entry.lastVolume ? entry.lastVolume : 'n/a'}</td>
+                            <td>osc count:</td>
+                            <td>{entry.oscCreatedCount}      </td>
+                            <td>freq @ stop:</td>
+                            <td>{entry.lastFrequency ? entry.lastFrequency : 'n/a'}      </td>
+                            <td>gain @ stop:</td>
+                            <td>{entry.lastVolume ? entry.lastVolume : 'n/a'}      </td>
                         </tr>
                     </tbody>
                 </table>

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Slider from './components/slider'
 import LogEntry from './components/logEntry'
 import noiseGenerator from './noiseGeneration'
+import { findByLabelText } from '@testing-library/react'
 
 const noise = {}
 
@@ -20,38 +21,52 @@ function App() {
     setIsPlaying(!isPlaying)
   }
 
-  console.log('app', noise.gainNode)
+  const style = {
+    display: 'flex',
+    flexDirection: 'row',
+    flexBasis: 'auto',
+  }
+
+  const style2 = {
+    minWidth: '200px'
+  }
+
   return (
     <div className="App">
       <h1>React Hooks and Web Audio</h1>
-      <div>
-        {!isPlaying
-          ? <button onClick={handlePlay}>play</button>
-          : <button onClick={handleStop}>stop</button>
-        }
-        <LogEntry log={noiseGenerator.log(noise)} />
-      </div>
-      
-      {isPlaying &&
+      <div style={style}>
+        <div id="left-col" style={style2}>
           <div>
-            <Slider 
-              parameter={noise.osc.frequency.value} 
-              noise={noise} 
-              setParameter={noiseGenerator.setFrequency}
-              min={100}
-              max={5000}
-              step={1}
-            />
-            <Slider
-              parameter={noise.gainNode.gain.value.toPrecision(2)}
-              noise={noise} 
-              setParameter={noiseGenerator.setGain}
-              min={0.00}
-              max={0.75}
-              step={0.01}
-            />
+            {!isPlaying
+              ? <button onClick={handlePlay}>play</button>
+              : <button onClick={handleStop}>stop</button>
+            }
           </div>
-      }
+          {isPlaying &&
+              <div>
+                <Slider 
+                  parameter={noise.osc.frequency.value} 
+                  noise={noise} 
+                  setParameter={noiseGenerator.setFrequency}
+                  min={100}
+                  max={5000}
+                  step={1}
+                />
+                <Slider
+                  parameter={noise.gainNode.gain.value.toPrecision(2)}
+                  noise={noise} 
+                  setParameter={noiseGenerator.setGain}
+                  min={0.00}
+                  max={0.75}
+                  step={0.01}
+                />
+              </div>
+          }
+        </div>
+        <div id="right-col">
+          <LogEntry log={noiseGenerator.log(noise)} />
+        </div>
+      </div>
     </div>
   );
 }
