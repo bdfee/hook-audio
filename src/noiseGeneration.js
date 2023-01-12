@@ -5,7 +5,7 @@ const noiseGenerator = (function () {
   let oscCreatedCount = 0
   // for initializing freq slider at previous slider's position
   let lastFrequency = 0
-  let lastVolume = 0.00
+  let lastVolume = 0
 
   const createTrack = (track) => {
     oscCreatedCount++
@@ -20,7 +20,7 @@ const noiseGenerator = (function () {
   }
   
   const setInitialGain = (track) => {
-    track.gainNode.gain.value = 0.30
+    track.gainNode.gain.value = 0.3
   }
 
   const setGain = (track, value) => {

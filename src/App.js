@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Slider from './components/slider'
 import LogEntry from './components/logEntry'
 import noiseGenerator from './noiseGeneration'
-import { findByLabelText } from '@testing-library/react'
 
 const noise = {}
 
@@ -56,9 +55,9 @@ function App() {
                   parameter={noise.gainNode.gain.value}
                   noise={noise} 
                   setParameter={noiseGenerator.setGain}
-                  min={0.00}
-                  max={0.75}
-                  step={0.01}
+                  min={0}
+                  max={.75}
+                  step={.01}
                 />
               </div>
           }
