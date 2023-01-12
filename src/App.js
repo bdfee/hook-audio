@@ -53,7 +53,7 @@ function App() {
                   step={1}
                 />
                 <Slider
-                  parameter={noise.gainNode.gain.value.toPrecision(2)}
+                  parameter={noise.gainNode.gain.value}
                   noise={noise} 
                   setParameter={noiseGenerator.setGain}
                   min={0.00}
