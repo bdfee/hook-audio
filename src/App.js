@@ -1,9 +1,13 @@
+import Oscillator from './components/oscillator'
 
 function App() {
 
   return (
     <div className="App">
-      <h1>useRef and Web Audio</h1>
+      <h1>React & Web Audio</h1>
+      <Oscillator />
+      <Oscillator />
+      <Oscillator />
     </div>
   );
 }
