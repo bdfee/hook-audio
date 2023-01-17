@@ -40,9 +40,10 @@ const Oscillator = () => {
   const setVolume = (track, value) => {
     setParams({
       ...params,
-      gain: value
+      gain: value > 0.01 ? value : 0
     })
-    track.gainNode.gain.setTargetAtTime(params.gain, audioContext.currentTime, 0.01)
+    console.log(params.gain)
+    track.gainNode.gain.value = params.gain
   }
 
   const setFrequency = (track, value) => {
@@ -55,31 +56,37 @@ const Oscillator = () => {
   
   return (
     <div>
-      {
-        !isActive 
-          ? <button onClick={() => play(track)}>play</button>
-          : <button onClick={() => stop(track)}>stop</button>
+      {!isActive 
+        ? <button onClick={() => play(track)}>play</button>
+        : <button onClick={() => stop(track)}>stop</button>
       }
-      <input
-        type="range"
-        value={params.frequency}
-        min={20}
-        max={6000}
-        step={1}
-        onChange={(e) => setFrequency(track, e.target.value)}
-      >
-      </input>
-      frequency {params.frequency}
-      <input
-        type="range"
-        value={params.gain}
-        min={0}
-        max={0.7}
-        step={0.01}
-        onChange={(e) => setVolume(track, e.target.value)}
-      >
-      </input>
-      gain {params.gain}
+      <div>
+      {track.osc
+        ? <div>
+            <input
+            type="range"
+            value={track.osc.frequency.value}
+            min={20}
+            max={1000}
+            step={.1}
+            onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
+            >
+            </input>
+            frequency {params.frequency}
+            <input
+              type="range"
+              value={track.gainNode.gain.value}
+              min={0}
+              max={0.7}
+              step={0.01}
+              onChange={(e) => setVolume(track, Math.fround(e.target.value))}
+            >
+            </input>
+            gain {params.gain}
+          </div>
+        : null
+      }
+      </div>
     </div>
   )
 }
