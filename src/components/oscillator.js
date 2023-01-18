@@ -40,7 +40,7 @@ const Oscillator = () => {
   const setVolume = (track, value) => {
     setParams({
       ...params,
-      gain: value > 0.01 ? value : 0
+      gain: value
     })
     console.log(params.gain)
     track.gainNode.gain.value = params.gain
@@ -72,7 +72,7 @@ const Oscillator = () => {
             onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
             >
             </input>
-            frequency {params.frequency}
+            frequency {params.frequency.toFixed(2)}
             <input
               type="range"
               value={track.gainNode.gain.value}
@@ -82,7 +82,7 @@ const Oscillator = () => {
               onChange={(e) => setVolume(track, Math.fround(e.target.value))}
             >
             </input>
-            gain {params.gain}
+            gain {params.gain.toFixed(2)}
           </div>
         : null
       }
