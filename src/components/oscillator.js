@@ -1,35 +1,35 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
-const track = {}
-
 const Oscillator = () => {
-  // useRef obj to persist track data across render
   const audioContext = useAudioContext()
+
   const [isActive, setIsActive] = useState(false)
   const [params, setParams] = useState({frequency: 440, gain: 0.3})
+  const trackRef = useRef({})
 
-  const create = (track) => {
-    track.osc = audioContext.createOscillator()
-    track.gainNode = audioContext.createGain()
+  const create = ({ current }) => {
+    current.osc = audioContext.createOscillator()
+    current.gainNode = audioContext.createGain()
   }
 
-  const connect = (track) => {
-    track.osc.connect(track.gainNode)
-    track.gainNode.connect(audioContext.destination)
+  const connect = ({ current }) => {
+    current.osc.connect(current.gainNode)
+    current.gainNode.connect(audioContext.destination)
   }
 
   const play = (track) => {
     create(track)
-    track.osc.frequency.value = params.frequency
-    track.gainNode.gain.value = params.gain
+    const { current } = track
+    current.osc.frequency.value = params.frequency
+    current.gainNode.gain.value = params.gain
     connect(track)
-    track.osc.start()
+    current.osc.start()
     setIsActive(true)
   }
 
-  const stop = (track) => {
-    track.osc.stop()
+  const stop = ({ current }) => {
+    current.osc.stop()
     setIsActive(false)
   }
 
@@ -38,7 +38,7 @@ const Oscillator = () => {
       ...params,
       gain: value
     })
-    track.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
+    track.current.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
   }
 
   const setFrequency = (track, value) => {
@@ -46,19 +46,19 @@ const Oscillator = () => {
       ...params,
       frequency: value
     })
-    track.osc.frequency.value = value
+    track.current.osc.frequency.value = value
   }
   
   return (
     <div>
       {!isActive 
-        ? <button onClick={() => play(track)}>play</button>
-        : <button onClick={() => stop(track)}>stop</button>
+        ? <button onClick={() => play(trackRef)}>play</button>
+        : <button onClick={() => stop(trackRef)}>stop</button>
       }
       Oscillator
-      <button onClick={() => {console.log(track)}}>log track</button>
+      <button onClick={() => {console.log(trackRef)}}>log track</button>
       <div>
-      {track.osc
+      {trackRef.current.osc
         ? <div>
             <input
               type="range"
@@ -66,17 +66,17 @@ const Oscillator = () => {
               min={0}
               max={0.7}
               step={0.01}
-              onChange={(e) => setVolume(track, Math.fround(e.target.value))}
+              onChange={(e) => setVolume(trackRef, Math.fround(e.target.value))}
             >
             </input>
             gain {params.gain.toFixed(2)}
             <input
             type="range"
-            value={track.osc.frequency.value}
+            value={params.frequency}
             min={20}
             max={1000}
             step={.1}
-            onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
+            onChange={(e) => setFrequency(trackRef, Math.fround(e.target.value))}
             >
             </input>
             frequency {params.frequency.toFixed(2)}

@@ -2,13 +2,14 @@ import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
 const PinkNoise = () => {
-  // useRef obj to persist track data across render
-  const track = useRef({})
   const audioContext = useAudioContext()
+
+  const trackRef = useRef({})
+
   const [isActive, setIsActive] = useState(false)
   const [params, setParams] = useState({gain: 0.1})
 
-  const createBuffer = (track) => {
+  const createBuffer = ({ current }) => {
     const bufferSize = 2 * audioContext.sampleRate
     const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate)
     const output = buffer.getChannelData(0)
@@ -35,18 +36,18 @@ const PinkNoise = () => {
       b6 = white * 0.115926
     }
 
-    track.audioSource.buffer = buffer
-    track.audioSource.loop = true
+    current.audioSource.buffer = buffer
+    current.audioSource.loop = true
   }
 
-  const createTrack = (track) => {
-    track.audioSource = audioContext.createBufferSource()
-    track.gainNode = audioContext.createGain()
+  const createTrack = ({ current }) => {
+    current.audioSource = audioContext.createBufferSource()
+    current.gainNode = audioContext.createGain()
   }
 
-  const connect = (track) => {
-    track.audioSource.connect(track.gainNode)
-    track.gainNode.connect(audioContext.destination)
+  const connect = ({ current }) => {
+    current.audioSource.connect(current.gainNode)
+    current.gainNode.connect(audioContext.destination)
   }
 
   const setVolume = (track, value) => {
@@ -54,33 +55,33 @@ const PinkNoise = () => {
       ...params,
       gain: value
     })
-    track.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
+    track.current.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
   }
 
 
   const play = (track) => {
     createTrack(track)
     createBuffer(track)
-    track.gainNode.gain.value = params.gain
+    track.current.gainNode.gain.value = params.gain
     connect(track)
-    track.audioSource.start()
+    track.current.audioSource.start()
     setIsActive(true)
   }
 
-  const stop = (track) => {
-    track.audioSource.stop()
+  const stop = ({ current }) => {
+    current.audioSource.stop()
     setIsActive(false)
   }
   
   return (
     <div>
       {!isActive 
-        ? <button onClick={() => play(track)}>play</button>
-        : <button onClick={() => stop(track)}>stop</button>
+        ? <button onClick={() => play(trackRef)}>play</button>
+        : <button onClick={() => stop(trackRef)}>stop</button>
       }
       Pink Noise
       <div>
-      {track.audioSource
+      {trackRef.current.audioSource
         ? <div>
             <input
               type="range"
@@ -88,7 +89,7 @@ const PinkNoise = () => {
               min={0}
               max={0.3}
               step={0.0001}
-              onChange={(e) => setVolume(track, Math.fround(e.target.value))}
+              onChange={(e) => setVolume(trackRef, Math.fround(e.target.value))}
             >
             </input>
             gain {params.gain.toFixed(4)}
