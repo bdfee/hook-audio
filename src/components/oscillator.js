@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
 const Oscillator = () => {
-  // useRef obj to persist track data across renders whilst declaring within component 
+  // useRef obj to persist track data across render
   const track = useRef({})
   const audioContext = useAudioContext()
   const [isActive, setIsActive] = useState(false)
@@ -42,8 +42,7 @@ const Oscillator = () => {
       ...params,
       gain: value
     })
-    console.log(params.gain)
-    track.gainNode.gain.value = params.gain
+    track.gainNode.gain.linearRampToValueAtTime(params.gain, audioContext.currentTime + .01)
   }
 
   const setFrequency = (track, value) => {
