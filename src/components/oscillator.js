@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
 const Oscillator = () => {
-  // useRef obj to persist track data across renders whilst declaring within component 
+  // useRef obj to persist track data across render
   const track = useRef({})
   const audioContext = useAudioContext()
   const [isActive, setIsActive] = useState(false)
@@ -42,7 +42,7 @@ const Oscillator = () => {
       ...params,
       gain: value
     })
-    track.gainNode.gain.setTargetAtTime(params.gain, audioContext.currentTime, 0.01)
+    track.gainNode.gain.linearRampToValueAtTime(params.gain, audioContext.currentTime + .01)
   }
 
   const setFrequency = (track, value) => {
@@ -55,31 +55,37 @@ const Oscillator = () => {
   
   return (
     <div>
-      {
-        !isActive 
-          ? <button onClick={() => play(track)}>play</button>
-          : <button onClick={() => stop(track)}>stop</button>
+      {!isActive 
+        ? <button onClick={() => play(track)}>play</button>
+        : <button onClick={() => stop(track)}>stop</button>
       }
-      <input
-        type="range"
-        value={params.frequency}
-        min={20}
-        max={6000}
-        step={1}
-        onChange={(e) => setFrequency(track, e.target.value)}
-      >
-      </input>
-      frequency {params.frequency}
-      <input
-        type="range"
-        value={params.gain}
-        min={0}
-        max={0.7}
-        step={0.01}
-        onChange={(e) => setVolume(track, e.target.value)}
-      >
-      </input>
-      gain {params.gain}
+      <div>
+      {track.osc
+        ? <div>
+            <input
+            type="range"
+            value={track.osc.frequency.value}
+            min={20}
+            max={1000}
+            step={.1}
+            onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
+            >
+            </input>
+            frequency {params.frequency.toFixed(2)}
+            <input
+              type="range"
+              value={track.gainNode.gain.value}
+              min={0}
+              max={0.7}
+              step={0.01}
+              onChange={(e) => setVolume(track, Math.fround(e.target.value))}
+            >
+            </input>
+            gain {params.gain.toFixed(2)}
+          </div>
+        : null
+      }
+      </div>
     </div>
   )
 }
