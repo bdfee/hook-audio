@@ -1,4 +1,5 @@
 import Oscillator from './components/oscillator'
+import PinkNoise from './components/pink-noise'
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
       <Oscillator />
       <Oscillator />
       <Oscillator />
+      <PinkNoise />
     </div>
   );
 }
