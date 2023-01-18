@@ -1,5 +1,6 @@
 import Oscillator from './components/oscillator'
-import PinkNoise from './components/pink-noise'
+// import PinkNoise from './components/pink-noise'
+import { audioCtx } from './utility/useAudioContext'
 
 function App() {
 
@@ -9,7 +10,11 @@ function App() {
       <Oscillator />
       <Oscillator />
       <Oscillator />
-      <PinkNoise />
+      <div>
+        <button onClick={ () => console.log(audioCtx) }>
+          log audio context
+        </button>
+      </div>
     </div>
   );
 }

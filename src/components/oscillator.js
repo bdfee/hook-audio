@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
+
+const track = {}
 
 const Oscillator = () => {
   // useRef obj to persist track data across render
-  const track = useRef({})
   const audioContext = useAudioContext()
   const [isActive, setIsActive] = useState(false)
   const [params, setParams] = useState({frequency: 440, gain: 0.3})
@@ -55,6 +56,7 @@ const Oscillator = () => {
         : <button onClick={() => stop(track)}>stop</button>
       }
       Oscillator
+      <button onClick={() => {console.log(track)}}>log track</button>
       <div>
       {track.osc
         ? <div>
