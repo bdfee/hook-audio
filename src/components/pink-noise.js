@@ -86,12 +86,12 @@ const PinkNoise = () => {
               type="range"
               value={track.gainNode.gain.value}
               min={0}
-              max={0.7}
-              step={0.01}
+              max={0.3}
+              step={0.0001}
               onChange={(e) => setVolume(track, Math.fround(e.target.value))}
             >
             </input>
-            gain {params.gain.toFixed(2)}
+            gain {params.gain.toFixed(4)}
           </div>
         : null
       }
