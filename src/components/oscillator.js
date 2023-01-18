@@ -2,33 +2,34 @@ import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
 const Oscillator = () => {
-  const trackRef = useRef({})
   const audioContext = useAudioContext()
+
   const [isActive, setIsActive] = useState(false)
   const [params, setParams] = useState({frequency: 440, gain: 0.3})
+  const trackRef = useRef({})
 
-  const create = (track) => {
-    console.log(track)
-    track.current.osc = audioContext.createOscillator()
-    track.current.gainNode = audioContext.createGain()
+  const create = ({ current }) => {
+    current.osc = audioContext.createOscillator()
+    current.gainNode = audioContext.createGain()
   }
 
-  const connect = (track) => {
-    track.current.osc.connect(track.current.gainNode)
-    track.current.gainNode.connect(audioContext.destination)
+  const connect = ({ current }) => {
+    current.osc.connect(current.gainNode)
+    current.gainNode.connect(audioContext.destination)
   }
 
   const play = (track) => {
     create(track)
-    track.current.osc.frequency.value = params.frequency
-    track.current.gainNode.gain.value = params.gain
+    const { current } = track
+    current.osc.frequency.value = params.frequency
+    current.gainNode.gain.value = params.gain
     connect(track)
-    track.current.osc.start()
+    current.osc.start()
     setIsActive(true)
   }
 
-  const stop = (track) => {
-    track.current.osc.stop()
+  const stop = ({ current }) => {
+    current.osc.stop()
     setIsActive(false)
   }
 
