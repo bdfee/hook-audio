@@ -46,9 +46,9 @@ const Oscillator = (props) => {
   }
   
   const handleRemoveTrack = (track, e) => {
-    const id = e.target.id
-    props.removeTrack(id)
-    track.current.osc.stop()
+    if (track.current.osc)
+      track.current.osc.stop()
+    props.removeTrack(e.target.id)
   }
 
   return (
@@ -58,7 +58,7 @@ const Oscillator = (props) => {
         : <button onClick={() => stop(trackRef)}>stop</button>
       }
       Oscillator {props.id}
-      <button onClick={(e) => {handleRemoveTrack(e)}} id={props.id}>remove track</button>
+      <button id={props.id} onClick={(e) => {handleRemoveTrack(trackRef, e)}}>remove track</button>
       <button onClick={() => {console.log(trackRef)}}>log track</button>
       <div>
       {trackRef.current.osc

@@ -20,6 +20,7 @@ const Oscillators = () => {
   }
 
   const removeTrack = (id) => {
+    console.log(id)
     setTracks(tracks.filter(track => track.id !== id))
   }
 
