@@ -28,11 +28,6 @@ const Oscillator = () => {
   }
 
   const stop = (track) => {
-    setParams({
-      ...params, 
-      frequency: track.osc.frequency.value, 
-      gain: track.gainNode.gain.value
-    })
     track.osc.stop()
     setIsActive(false)
   }
@@ -59,19 +54,10 @@ const Oscillator = () => {
         ? <button onClick={() => play(track)}>play</button>
         : <button onClick={() => stop(track)}>stop</button>
       }
+      Oscillator
       <div>
       {track.osc
         ? <div>
-            <input
-            type="range"
-            value={track.osc.frequency.value}
-            min={20}
-            max={1000}
-            step={.1}
-            onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
-            >
-            </input>
-            frequency {params.frequency.toFixed(2)}
             <input
               type="range"
               value={track.gainNode.gain.value}
@@ -82,6 +68,16 @@ const Oscillator = () => {
             >
             </input>
             gain {params.gain.toFixed(2)}
+            <input
+            type="range"
+            value={track.osc.frequency.value}
+            min={20}
+            max={1000}
+            step={.1}
+            onChange={(e) => setFrequency(track, Math.fround(e.target.value))}
+            >
+            </input>
+            frequency {params.frequency.toFixed(2)}
           </div>
         : null
       }
