@@ -37,7 +37,7 @@ const Oscillator = () => {
       ...params,
       gain: value
     })
-    track.gainNode.gain.linearRampToValueAtTime(params.gain, audioContext.currentTime + .01)
+    track.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
   }
 
   const setFrequency = (track, value) => {
@@ -45,7 +45,7 @@ const Oscillator = () => {
       ...params,
       frequency: value
     })
-    track.osc.frequency.value = params.frequency
+    track.osc.frequency.value = value
   }
   
   return (
@@ -60,7 +60,7 @@ const Oscillator = () => {
         ? <div>
             <input
               type="range"
-              value={track.gainNode.gain.value}
+              value={params.gain}
               min={0}
               max={0.7}
               step={0.01}

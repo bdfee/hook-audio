@@ -6,7 +6,7 @@ const PinkNoise = () => {
   const track = useRef({})
   const audioContext = useAudioContext()
   const [isActive, setIsActive] = useState(false)
-  const [params, setParams] = useState({gain: 0.3})
+  const [params, setParams] = useState({gain: 0.1})
 
   const createBuffer = (track) => {
     const bufferSize = 2 * audioContext.sampleRate
@@ -54,7 +54,7 @@ const PinkNoise = () => {
       ...params,
       gain: value
     })
-    track.gainNode.gain.linearRampToValueAtTime(params.gain, audioContext.currentTime + .01)
+    track.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
   }
 
 
@@ -84,7 +84,7 @@ const PinkNoise = () => {
         ? <div>
             <input
               type="range"
-              value={track.gainNode.gain.value}
+              value={params.gain}
               min={0}
               max={0.3}
               step={0.0001}
