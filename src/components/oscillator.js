@@ -1,11 +1,9 @@
 import { useState, useRef } from 'react'
 import { useAudioContext } from '../utility/useAudioContext'
 
-const Oscillator = () => {
+const Oscillator = (props) => {
   const audioContext = useAudioContext()
-
   const [isActive, setIsActive] = useState(false)
-  const [params, setParams] = useState({frequency: 440, gain: 0.3})
   const trackRef = useRef({})
 
   const create = ({ current }) => {
@@ -21,8 +19,8 @@ const Oscillator = () => {
   const play = (track) => {
     create(track)
     const { current } = track
-    current.osc.frequency.value = params.frequency
-    current.gainNode.gain.value = params.gain
+    current.osc.frequency.value = props.frequency
+    current.gainNode.gain.value = props.gain
     connect(track)
     current.osc.start()
     setIsActive(true)
@@ -33,53 +31,58 @@ const Oscillator = () => {
     setIsActive(false)
   }
 
-  const setVolume = (track, value) => {
-    setParams({
-      ...params,
-      gain: value
-    })
+  const handleSetVolume = (track, e) => {
+    const value = Math.fround(e.target.value)
+    const id = e.target.id
+    props.setVolume(id, value)
     track.current.gainNode.gain.linearRampToValueAtTime(value, audioContext.currentTime + .01)
   }
 
-  const setFrequency = (track, value) => {
-    setParams({
-      ...params,
-      frequency: value
-    })
+  const handleSetFrequency = (track, e) => {
+    const value = Math.fround(e.target.value)
+    const id = e.target.id
+    props.setFrequency(id, value)
     track.current.osc.frequency.value = value
   }
   
+  const handleRemoveTrack = (track, e) => {
+    const id = e.target.id
+    props.removeTrack(id)
+    track.current.osc.stop()
+  }
+
   return (
-    <div>
+    <div key={props.id} id={props.id}>
       {!isActive 
         ? <button onClick={() => play(trackRef)}>play</button>
         : <button onClick={() => stop(trackRef)}>stop</button>
       }
-      Oscillator
+      Oscillator {props.id}
+      <button onClick={(e) => {handleRemoveTrack(e)}} id={props.id}>remove track</button>
       <button onClick={() => {console.log(trackRef)}}>log track</button>
       <div>
       {trackRef.current.osc
         ? <div>
             <input
+              id={props.id}
               type="range"
-              value={params.gain}
+              value={props.gain}
               min={0}
               max={0.7}
               step={0.01}
-              onChange={(e) => setVolume(trackRef, Math.fround(e.target.value))}
+              onChange={(e) => handleSetVolume(trackRef, e)}
             >
-            </input>
-            gain {params.gain.toFixed(2)}
+            </input> gain {props.gain.toFixed(2)}
             <input
-            type="range"
-            value={params.frequency}
-            min={20}
-            max={1000}
-            step={.1}
-            onChange={(e) => setFrequency(trackRef, Math.fround(e.target.value))}
+              id={props.id}
+              type="range"
+              value={props.frequency}
+              min={20}
+              max={1000}
+              step={.1}
+              onChange={(e) => handleSetFrequency(trackRef, e)}
             >
-            </input>
-            frequency {params.frequency.toFixed(2)}
+            </input> frequency {props.frequency.toFixed(2)}
           </div>
         : null
       }
