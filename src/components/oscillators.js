@@ -51,6 +51,20 @@ const Oscillators = () => {
     }))
   }
 
+  // TODO higher org in track object
+  //
+  //  track = {
+  //    id,
+  //    isActive,
+  //    osc: {
+  //      frequencyParam,
+  //      gainParam,
+  //      oscNode
+  //      gainNode
+  //    },
+  //    filter: {}
+
+
   const handleAddTrack = () => {
     const newTrack = {
       id: generateId(),
