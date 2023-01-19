@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Oscillator from './oscillator'
+import { useAudioContext } from '../utility/useAudioContext'
 
 //temporary
 const generateId = () => {
@@ -9,37 +10,83 @@ const generateId = () => {
 const Oscillators = () => {
   
   const [tracks, setTracks] = useState([])
+  const audioContext = useAudioContext()
+
+  const createNodes = (track) => {
+    // create osc and gainNode key value on track obj
+    track.osc = audioContext.createOscillator()
+    track.gainNode = audioContext.createGain()
+  }
+
+  const setParams = (track) => {
+    track.osc.frequency.value = track.frequency
+    track.gainNode.gain.value = track.gain
+  }
+
+  const connect = ({ osc, gainNode }) => {
+    // connect osc to gainNode and gainNode to destination
+    osc.connect(gainNode)
+    gainNode.connect(audioContext.destination)
+  }
+
+  // transport controls
+  const play = (track, e) => {
+    createNodes(track)
+    setParams(track)
+    connect(track)
+    track.osc.start()
+    setTracks(tracks.map(track => {
+      if (track.id === e.target.id)
+        track.isActive = true
+      return track
+    }))
+  }
+
+  const stop = (track, e) => {
+    track.osc.stop()
+    setTracks(tracks.map(track => {
+      if (track.id === e.target.id)
+        track.isActive = false
+      return track
+    }))
+  }
 
   const handleAddTrack = () => {
     const newTrack = {
       id: generateId(),
       frequency: 440,
-      gain: 0.3
+      gain: 0.3,
+      isActive: false
     }
     setTracks(tracks.concat(newTrack))
   }
 
-  const removeTrack = (id) => {
-    console.log(id)
-    setTracks(tracks.filter(track => track.id !== id))
+  const removeTrack = (track, e) => {
+    if (track.isActive)
+      track.osc.stop()
+    setTracks(tracks.filter(track => track.id !== e.target.id)
+    )
   }
 
-  const setVolume = (id, value) => {
+  const setVolume = (track, e) => {
+    track.gainNode.gain.linearRampToValueAtTime(Number(e.target.value), audioContext.currentTime + .01)
     setTracks(tracks.map(track => {
-      if (track.id === id)
-        track.gain = value
+      if (track.id === e.target.id)
+        track.gain = Number(e.target.value)
       return track
     }
     ))
   }
 
-  const setFrequency = (id, value) => {
+  const setFrequency = (track, e) => {
+    track.osc.frequency.value = Number(e.target.value)
     setTracks(tracks.map(track => {
-      if (track.id === id)
-        track.frequency = value
+      if (track.id === e.target.id)
+        track.frequency = Number(e.target.value)
       return track
     }))
   }
+
 
   return (
     <div>
@@ -48,13 +95,13 @@ const Oscillators = () => {
       {tracks.map(track => {
         return (
           <Oscillator 
-            id={track.id} 
-            key={track.id} 
+            track={track}
+            key={track.id}
             removeTrack={removeTrack}
             setVolume={setVolume}
             setFrequency={setFrequency}
-            frequency={track.frequency}
-            gain={track.gain}
+            stop={stop}
+            play={play}
           />
         )
       })}
